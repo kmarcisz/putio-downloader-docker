@@ -1,0 +1,35 @@
+version: "3"
+
+services:
+  aria:
+    image: abcminiuser/docker-aria2-with-webui:latest-ng
+
+    ports:
+      - 6800:6800
+      - 6880:80
+
+    volumes:
+      - ./data:/data
+      - ./conf:/conf
+      - ./incomplete:/incomplete
+
+    environment:
+      - PGID=1000
+      - PUID=1000
+      - SECRET=download
+
+  putio-downloader:
+    build:
+      dockerfile: putio-downloader.Dockerfile
+      context: .
+    
+    depends_on:
+      - aria
+
+    volumes:
+      - ./data:/data
+      - ./incomplete:/incomplete
+
+    environment:
+      - PGID=1000
+      - PUID=1000
